@@ -23,6 +23,12 @@ public class TestCueSDK {
     }
 
     @Test
+    public void testGetDeviceInfo()  {
+        final CorsairDeviceInfo info = instance.corsairGetDeviceInfo(0);
+        System.out.println("model = " + info.model.getString(0));
+    }
+
+    @Test
     public void testGetLedPositions() {
         final List<CorsairLedPosition> ledPositions = instance.corsairGetLedPositions();
         System.out.println("ledPositions.size = " + ledPositions.size());

@@ -22,7 +22,13 @@ public class CueSDK {
      */
     public CueSDK(boolean exclusiveLightingControl) {
         instance = CueSDKLibrary.INSTANCE;
-        final CorsairProtocolDetails.ByValue byValue = instance.CorsairPerformProtocolHandshake();
+        final CorsairProtocolDetails.ByValue protocolDetails = instance.CorsairPerformProtocolHandshake();
+
+        if (protocolDetails.breakingChanges != 0) {
+            String sdkVersion = protocolDetails.sdkVersion.getString(0);
+            String cueVersion = protocolDetails.serverVersion.getString(0);
+            throw new RuntimeException("Incompatible SDK (" + sdkVersion + ") and CUE " + cueVersion + " versions.");
+        }
 
         if (exclusiveLightingControl) {
             final byte ret = instance.CorsairRequestControl(CueSDKLibrary.CorsairAccessMode.CAM_ExclusiveLightingControl);
@@ -41,13 +47,26 @@ public class CueSDK {
     }
 
     /**
+     * Get the number of connected devices compatible with the Corsair CUE SDK.
+     * @return number of devices
+     */
+    public CorsairDeviceInfo corsairGetDeviceInfo(int deviceIndex) {
+        return instance.CorsairGetDeviceInfo(deviceIndex);
+    }
+
+    /**
      * Retrieve a list of available LED positions, including their id and physical properties.
      * @return list of LED details
      */
     public List<CorsairLedPosition> corsairGetLedPositions() {
         final CorsairLedPositions corsairLedPositions = instance.CorsairGetLedPositions();
-        final CorsairLedPosition.ByReference pLedPosition = corsairLedPositions.pLedPosition;
-        final CorsairLedPosition[] ledPositions = (CorsairLedPosition[]) pLedPosition.toArray(new CorsairLedPosition[corsairLedPositions.numberOfLed]);
+        CorsairLedPosition[] ledPositions;
+        if (corsairLedPositions == null || corsairLedPositions.numberOfLed == 0) {
+            ledPositions = new CorsairLedPosition[0];
+        } else {
+            final CorsairLedPosition.ByReference pLedPosition = corsairLedPositions.pLedPosition;
+            ledPositions = (CorsairLedPosition[]) pLedPosition.toArray(new CorsairLedPosition[corsairLedPositions.numberOfLed]);
+        }
         return Arrays.asList(ledPositions);
     }
 
