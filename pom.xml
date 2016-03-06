@@ -42,11 +42,11 @@
                         </goals>
                         <configuration>
                             <url>
-                                http://softwaredownloads.corsair.com/Files/Gaming-Keyboards/Corsair-SDK-Release-v1.10.73.zip
+                                http://softwaredownloads.corsair.com/Files/Gaming-Keyboards/Corsair-SDK-Release-v1.15.28.zip
                             </url>
                             <outputFileName>cuesdk.zip</outputFileName>
                             <outputDirectory>${project.build.directory}</outputDirectory>
-                            <md5>3ca92ab321441cb03e7e71f34cb7fe08</md5>
+                            <md5>e22a7036e56b54d42fdd5e8b9285c3a9</md5>
                         </configuration>
                     </execution>
                 </executions>
