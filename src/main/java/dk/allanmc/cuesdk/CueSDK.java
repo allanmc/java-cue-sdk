@@ -31,6 +31,10 @@ public class CueSDK {
         instance = CueSDKLibrary.INSTANCE;
         final CorsairProtocolDetails.ByValue protocolDetails = instance.CorsairPerformProtocolHandshake();
 
+        if (protocolDetails.serverProtocolVersion == 0) {
+            handleError();
+        }
+
         if (protocolDetails.breakingChanges != 0) {
             String sdkVersion = protocolDetails.sdkVersion.getString(0);
             String cueVersion = protocolDetails.serverVersion.getString(0);
@@ -136,6 +140,8 @@ public class CueSDK {
     private void handleError() {
         final int errorId = instance.CorsairGetLastError();
         final CorsairError error = CorsairError.byOrdinal(errorId);
-        throw new RuntimeException(error + " - " + error.getMessage());
+        if (error != CorsairError.CE_Success) {
+            throw new RuntimeException(error + " - " + error.getMessage());
+        }
     }
 }
