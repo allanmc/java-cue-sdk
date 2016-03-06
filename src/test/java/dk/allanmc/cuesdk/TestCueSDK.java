@@ -2,7 +2,6 @@ package dk.allanmc.cuesdk;
 
 import dk.allanmc.cuesdk.enums.DeviceCaps;
 import dk.allanmc.cuesdk.enums.LedId;
-import dk.allanmc.cuesdk.enums.PhysicalLayout;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
