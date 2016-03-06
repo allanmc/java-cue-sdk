@@ -1,0 +1,9 @@
+// JNAerator config file.
+
+-runtime JNA
+
+-library CueSDK
+
+-package dk.allanmc.cuesdk
+
+$(DIR)/../../../target/CUESDK/include/CUESDK.h

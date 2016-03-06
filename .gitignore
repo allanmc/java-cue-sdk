@@ -1,0 +1,5 @@
+src/main/resources/win32-x86
+src/main/resources/win32-x86-64
+.idea
+*.iml
+target
