@@ -47,8 +47,9 @@ public class CueSDK {
     }
 
     /**
-     * Get the number of connected devices compatible with the Corsair CUE SDK.
-     * @return number of devices
+     *  Retrieve information about a connected device.
+     * @param deviceIndex Index of the connected device to get information about
+     * @return
      */
     public CorsairDeviceInfo corsairGetDeviceInfo(int deviceIndex) {
         return instance.CorsairGetDeviceInfo(deviceIndex);
