@@ -10,7 +10,7 @@ The `CueSDK` class provides some helper methods to access the most common needs 
 ```Java
 package dk.allanmc.test;
 
-import dk.allanmc.cuesdk.CorsairLedColor;
+import dk.allanmc.cuesdk.LedColor;
 import dk.allanmc.cuesdk.CueSDK;
 
 public class CueSDKExample {
