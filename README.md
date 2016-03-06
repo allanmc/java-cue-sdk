@@ -31,23 +31,23 @@ public class CueSDKExample {
 ```````
 
 ## Reference
-#### ``CueSDK()``
-Instantiates a new CueSDK, and establishes a connection to the Corsair SDK with shared control.
+###### ``CueSDK()``
+Constructor. Instantiates a new CueSDK, and establishes a connection to the Corsair SDK with shared control.
 
-#### ``CueSDK(boolean exclusiveLightingControl)``
-Instantiates a new CueSDK, and establishes a connection to the Corsair SDK with shared or exclusive control.
+###### ``CueSDK(boolean exclusiveLightingControl)``
+Constructor. Instantiates a new CueSDK, and establishes a connection to the Corsair SDK with shared or exclusive control.
 
-#### ``int corsairGetDeviceCount()``
+###### ``int corsairGetDeviceCount()``
 Get the number of connected devices compatible with the Corsair CUE SDK.
 
-#### ``CorsairDeviceInfo corsairGetDeviceInfo(int deviceIndex)``
+###### ``CorsairDeviceInfo corsairGetDeviceInfo(int deviceIndex)``
 Retrieve information about a connected device.
 
-#### ``List<CorsairLedPosition> corsairGetLedPositions()``
+###### ``List<CorsairLedPosition> corsairGetLedPositions()``
 Retrieve a list of available LED positions, including their id and physical properties.
 
-#### ``void corsairSetLedColor(CorsairLedColor ledColor)``
+###### ``void corsairSetLedColor(CorsairLedColor ledColor)``
 Set the color of a single LED.
 
-#### ``void corsairSetLedsColors(Collection<CorsairLedColor> ledColors)``
+###### ``void corsairSetLedsColors(Collection<CorsairLedColor> ledColors)``
 Set the color af several LED at the same time.
