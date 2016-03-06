@@ -14,16 +14,25 @@ import dk.allanmc.cuesdk.CorsairLedColor;
 import dk.allanmc.cuesdk.CueSDK;
 
 public class CueSDKExample {
-
     public static void main(String[] args) throws InterruptedException {
         // Establish connection with device
         final CueSDK cue = new CueSDK(true);
 
-        // Set LED #1 to red
-        cue.corsairSetLedColor(new CorsairLedColor(1, 255, 0, 0));
+        // Set LED of the Enter key to red
+        cue.setLedColor(new LedColor(LedId.CLK_Enter, 255, 0, 0));
+        // Set LED of the left Shift key to green
+        cue.setLedColor(new LedColor(LedId.CLK_RightShift, Color.GREEN));
 
-        // Wait some time before exiting, so we can see the LED.
-        Thread.sleep(5000);
+        // Set color of multiple keys at the same time
+        cue.setLedsColors(Arrays.asList(
+                new LedColor(LedId.CLK_W, Color.YELLOW),
+                new LedColor(LedId.CLK_A, Color.YELLOW),
+                new LedColor(LedId.CLK_S, Color.YELLOW),
+                new LedColor(LedId.CLK_D, Color.YELLOW)
+        ));
+
+        // Wait some time before exiting, so we can see the LEDs.
+        Thread.sleep(1000);
     }
 
 }
@@ -31,23 +40,36 @@ public class CueSDKExample {
 ```````
 
 ## Reference
-###### ``CueSDK()``
-Constructor. Instantiates a new CueSDK, and establishes a connection to the Corsair SDK with shared control.
+###### `public CueSDK()`
+Instantiates a new CueSDK, and establishes a connection to the Corsair SDK with shared control.
 
-###### ``CueSDK(boolean exclusiveLightingControl)``
-Constructor. Instantiates a new CueSDK, and establishes a connection to the Corsair SDK with shared or exclusive control.
+###### `public CueSDK(boolean exclusiveLightingControl)`
+Instantiates a new CueSDK, and establishes a connection to the Corsair SDK with shared or exclusive control.
 
-###### ``int corsairGetDeviceCount()``
+ * **Parameters:** `exclusiveLightingControl` — Whether exclusive light control is needed or not.
+
+###### `public int getDeviceCount()`
 Get the number of connected devices compatible with the Corsair CUE SDK.
 
-###### ``CorsairDeviceInfo corsairGetDeviceInfo(int deviceIndex)``
+ * **Returns:** number of devices
+
+###### `public DeviceInfo getDeviceInfo(int deviceIndex)`
 Retrieve information about a connected device.
 
-###### ``List<CorsairLedPosition> corsairGetLedPositions()``
+ * **Parameters:** `deviceIndex` — Index of the connected device to get information about
+ * **Returns:** device information
+
+###### `public List<LedPosition> getLedPositions()`
 Retrieve a list of available LED positions, including their id and physical properties.
 
-###### ``void corsairSetLedColor(CorsairLedColor ledColor)``
+ * **Returns:** list of LED details
+
+###### `public void setLedsColors(Collection<LedColor> ledColors)`
+Set the color af several LED at the same time.
+
+ * **Parameters:** `ledColors` — List of LED identifiers and colors
+
+###### `public void setLedColor(LedColor ledColor)`
 Set the color of a single LED.
 
-###### ``void corsairSetLedsColors(Collection<CorsairLedColor> ledColors)``
-Set the color af several LED at the same time.
+ * **Parameters:** `ledColor` — LED identifier and color

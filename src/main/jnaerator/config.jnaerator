@@ -4,6 +4,6 @@
 
 -library CueSDK
 
--package dk.allanmc.cuesdk
+-package dk.allanmc.cuesdk.jna
 
 $(DIR)/../../../target/CUESDK/include/CUESDK.h

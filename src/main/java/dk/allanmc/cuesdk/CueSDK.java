@@ -1,13 +1,20 @@
 package dk.allanmc.cuesdk;
 
-import java.util.Arrays;
+import dk.allanmc.cuesdk.enums.CorsairError;
+import dk.allanmc.cuesdk.jna.CorsairLedColor;
+import dk.allanmc.cuesdk.jna.CorsairLedPosition;
+import dk.allanmc.cuesdk.jna.CorsairLedPositions;
+import dk.allanmc.cuesdk.jna.CorsairProtocolDetails;
+import dk.allanmc.cuesdk.jna.CueSDKLibrary;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 public class CueSDK {
 
-    private CueSDKLibrary instance;
+    private final CueSDKLibrary instance;
 
     /**
      * Instantiates a new CueSDK, and establishes a connection to the Corsair SDK with shared control.
@@ -42,56 +49,61 @@ public class CueSDK {
      * Get the number of connected devices compatible with the Corsair CUE SDK.
      * @return number of devices
      */
-    public int corsairGetDeviceCount() {
+    public int getDeviceCount() {
         return instance.CorsairGetDeviceCount();
     }
 
     /**
      *  Retrieve information about a connected device.
      * @param deviceIndex Index of the connected device to get information about
-     * @return
+     * @return device information
      */
-    public CorsairDeviceInfo corsairGetDeviceInfo(int deviceIndex) {
-        return instance.CorsairGetDeviceInfo(deviceIndex);
+    public DeviceInfo getDeviceInfo(int deviceIndex) {
+        return new DeviceInfo(instance.CorsairGetDeviceInfo(deviceIndex));
     }
 
     /**
      * Retrieve a list of available LED positions, including their id and physical properties.
      * @return list of LED details
      */
-    public List<CorsairLedPosition> corsairGetLedPositions() {
+    public List<LedPosition> getLedPositions() {
         final CorsairLedPositions corsairLedPositions = instance.CorsairGetLedPositions();
-        CorsairLedPosition[] ledPositions;
-        if (corsairLedPositions == null || corsairLedPositions.numberOfLed == 0) {
-            ledPositions = new CorsairLedPosition[0];
-        } else {
+        final ArrayList<LedPosition> ledPositions = new ArrayList<>();
+        final int count = corsairLedPositions.numberOfLed;
+
+        if (corsairLedPositions != null && count > 0) {
             final CorsairLedPosition.ByReference pLedPosition = corsairLedPositions.pLedPosition;
-            ledPositions = (CorsairLedPosition[]) pLedPosition.toArray(new CorsairLedPosition[corsairLedPositions.numberOfLed]);
+            final CorsairLedPosition[] nativeLedPositions = (CorsairLedPosition[]) pLedPosition.toArray(new CorsairLedPosition[count]);
+            ledPositions.ensureCapacity(count);
+            for (CorsairLedPosition nativeLedPosition : nativeLedPositions) {
+                ledPositions.add(new LedPosition(nativeLedPosition));
+            }
+
         }
-        return Arrays.asList(ledPositions);
+        return ledPositions;
     }
 
     /**
      * Set the color af several LED at the same time.
      * @param ledColors List of LED identifiers and colors
      */
-    public void corsairSetLedsColors(Collection<CorsairLedColor> ledColors) {
+    public void setLedsColors(Collection<LedColor> ledColors) {
         if (ledColors == null || ledColors.isEmpty()) {
             return;
         }
-        final Iterator<CorsairLedColor> iterator = ledColors.iterator();
-        CorsairLedColor ledColor = iterator.next();
+        final Iterator<LedColor> iterator = ledColors.iterator();
+        LedColor ledColor = iterator.next();
         if (ledColors.size() == 1) {
-            corsairSetLedColor(ledColor);
+            setLedColor(ledColor);
         } else {
-            final CorsairLedColor[] fixedLedColors = (CorsairLedColor[]) new CorsairLedColor().toArray(ledColors.size());
+            final CorsairLedColor[] nativeLedColors = (CorsairLedColor[]) new CorsairLedColor().toArray(ledColors.size());
             int index = 0;
-            copyCorsairLedColor(fixedLedColors[index++], ledColor);
+            copyCorsairLedColor(ledColor, nativeLedColors[index++]);
             while (iterator.hasNext()) {
                 ledColor = iterator.next();
-                copyCorsairLedColor(fixedLedColors[index++], ledColor);
+                copyCorsairLedColor(ledColor, nativeLedColors[index++]);
             }
-            final byte ret = instance.CorsairSetLedsColors(fixedLedColors.length, fixedLedColors[0]);
+            final byte ret = instance.CorsairSetLedsColors(nativeLedColors.length, nativeLedColors[0]);
             if (ret != 1) {
                 handleError();
             }
@@ -102,17 +114,19 @@ public class CueSDK {
      * Set the color of a single LED.
      * @param ledColor LED identifier and color
      */
-    public void corsairSetLedColor(CorsairLedColor ledColor) {
+    public void setLedColor(LedColor ledColor) {
         if (ledColor == null) {
             return;
         }
-        final byte ret = instance.CorsairSetLedsColors(1, ledColor);
+        final CorsairLedColor nativeLedColor = new CorsairLedColor();
+        copyCorsairLedColor(ledColor, nativeLedColor);
+        final byte ret = instance.CorsairSetLedsColors(1, nativeLedColor);
         if (ret != 1) {
             handleError();
         }
     }
 
-    private void copyCorsairLedColor(CorsairLedColor dst, CorsairLedColor src) {
+    private void copyCorsairLedColor(LedColor src, CorsairLedColor dst) {
         dst.ledId = src.ledId;
         dst.r = src.r;
         dst.g = src.g;
@@ -121,7 +135,7 @@ public class CueSDK {
 
     private void handleError() {
         final int errorId = instance.CorsairGetLastError();
-        final CorsairError error = CorsairError.byId(errorId);
-        throw new RuntimeException(error + " - " + error.message);
+        final CorsairError error = CorsairError.byOrdinal(errorId);
+        throw new RuntimeException(error + " - " + error.getMessage());
     }
 }
