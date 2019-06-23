@@ -25,4 +25,9 @@ public enum CorsairError {
     public String getMessage() {
         return message;
     }
+
+    @Override
+    public String toString() {
+        return "CorsairError{"  + message + "}";
+    }
 }

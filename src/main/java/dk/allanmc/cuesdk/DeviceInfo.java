@@ -28,6 +28,7 @@ public class DeviceInfo {
         this.model = deviceInfo.model.getString(0);
         this.physicalLayout = PhysicalLayout.byOrdinal(deviceInfo.physicalLayout);
         this.logicalLayout = LogicalLayout.byOrdinal(deviceInfo.logicalLayout);
+        this.capsMask = deviceInfo.capsMask;
     }
 
     public DeviceType getType() {

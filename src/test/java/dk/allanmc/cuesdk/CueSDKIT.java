@@ -1,7 +1,8 @@
 package dk.allanmc.cuesdk;
 
+import static dk.allanmc.cuesdk.jna.CueSDKLibrary.CorsairLedId;
+
 import dk.allanmc.cuesdk.enums.DeviceCaps;
-import dk.allanmc.cuesdk.enums.LedId;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -10,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class TestCueSDK {
+public class CueSDKIT {
 
     private static CueSDK instance;
 
@@ -27,12 +28,16 @@ public class TestCueSDK {
 
     @Test
     public void testGetDeviceInfo()  {
-        final DeviceInfo info = instance.getDeviceInfo(0);
-        System.out.println("type = " + info.getType());
-        System.out.println("model = " + info.getModel());
-        System.out.println("logicalLayout = " + info.getLogicalLayout());
-        System.out.println("physicalLayout = " + info.getPhysicalLayout());
-        System.out.println("supports lightning = " + info.hasCapability(DeviceCaps.CDC_Lighting));
+        int numDevices = instance.getDeviceCount();
+        while (numDevices > 0) {
+            final DeviceInfo info = instance.getDeviceInfo(--numDevices);
+            System.out.println("type = " + info.getType());
+            System.out.println("model = " + info.getModel());
+            System.out.println("logicalLayout = " + info.getLogicalLayout());
+            System.out.println("physicalLayout = " + info.getPhysicalLayout());
+            System.out.println("supports lightning = " + info.hasCapability(DeviceCaps.CDC_Lighting));
+            System.out.println();
+        }
     }
 
     @Test
@@ -42,8 +47,8 @@ public class TestCueSDK {
     }
 
     @Test
-    public void testLedId() throws InterruptedException {
-        instance.setLedColor(new LedColor(LedId.CLK_Enter, 255, 255, 255));
+    public void testLedId() {
+        instance.setLedColor(new LedColor(CorsairLedId.CLK_Enter, 255, 255, 255));
     }
 
     @Test
@@ -74,16 +79,16 @@ public class TestCueSDK {
         final CueSDK cue = new CueSDK(true);
 
         // Set LED of the Enter key to red
-        cue.setLedColor(new LedColor(LedId.CLK_Enter, 255, 0, 0));
+        cue.setLedColor(new LedColor(CorsairLedId.CLK_Enter, 255, 0, 0));
         // Set LED of the left Shift key to green
-        cue.setLedColor(new LedColor(LedId.CLK_RightShift, Color.GREEN));
+        cue.setLedColor(new LedColor(CorsairLedId.CLK_RightShift, Color.GREEN));
 
         // Set color of multiple keys at the same time
         cue.setLedsColors(Arrays.asList(
-                new LedColor(LedId.CLK_W, Color.YELLOW),
-                new LedColor(LedId.CLK_A, Color.YELLOW),
-                new LedColor(LedId.CLK_S, Color.YELLOW),
-                new LedColor(LedId.CLK_D, Color.YELLOW)
+                new LedColor(CorsairLedId.CLK_W, Color.YELLOW),
+                new LedColor(CorsairLedId.CLK_A, Color.YELLOW),
+                new LedColor(CorsairLedId.CLK_S, Color.YELLOW),
+                new LedColor(CorsairLedId.CLK_D, Color.YELLOW)
         ));
 
         // Wait some time before exiting, so we can see the LEDs.

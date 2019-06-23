@@ -4,7 +4,13 @@ public enum DeviceType {
     CDT_Unknown,
     CDT_Mouse,
     CDT_Keyboard,
-    CDT_Headset;
+    CDT_Headset,
+    CDT_MouseMat,
+    CDT_HeadsetStand,
+    CDT_CommanderPro,
+    CDT_LightingNodePro,
+    CDT_MemoryModule,
+    CDT_Cooler;
 
     private static DeviceType[] values = DeviceType.values();
 

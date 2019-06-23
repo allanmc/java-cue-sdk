@@ -24,7 +24,7 @@
         <dependency>
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna</artifactId>
-            <version>4.2.1</version>
+            <version>4.2.2</version>
         </dependency>
     </dependencies>
 
@@ -33,7 +33,7 @@
             <plugin>
                 <groupId>com.googlecode.maven-download-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>1.4.2</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
@@ -41,12 +41,10 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>
-                                http://softwaredownloads.corsair.com/Files/Gaming-Keyboards/Corsair-SDK-Release-v1.15.28.zip
-                            </url>
+                            <url>http://downloads.corsair.com/Files/CUE/CUESDK_3.0.234.zip</url>
                             <outputFileName>cuesdk.zip</outputFileName>
                             <outputDirectory>${project.build.directory}</outputDirectory>
-                            <md5>e22a7036e56b54d42fdd5e8b9285c3a9</md5>
+                            <md5>332bbf042e8b358430133cac6a896e9c</md5>
                         </configuration>
                     </execution>
                 </executions>
@@ -61,9 +59,9 @@
                         <configuration>
                             <target>
                                 <unzip src="${project.build.directory}/cuesdk.zip" dest="${project.build.directory}/" />
-                                <move file="${project.build.directory}/CUESDK/bin/x64/CUESDK.x64_2013.dll"
+                                <move file="${project.build.directory}/CUESDK/redist/x64/CUESDK.x64_2015.dll"
                                       tofile="${basedir}/src/main/resources/win32-x86-64/CueSDK.dll" />
-                                <move file="${project.build.directory}/CUESDK/bin/i386/CUESDK_2013.dll"
+                                <move file="${project.build.directory}/CUESDK/redist/i386/CUESDK_2015.dll"
                                       tofile="${basedir}/src/main/resources/win32-x86/CueSDK.dll" />
                             </target>
                         </configuration>

@@ -73,9 +73,9 @@ public class CueSDK {
     public List<LedPosition> getLedPositions() {
         final CorsairLedPositions corsairLedPositions = instance.CorsairGetLedPositions();
         final ArrayList<LedPosition> ledPositions = new ArrayList<>();
-        final int count = corsairLedPositions.numberOfLed;
 
-        if (corsairLedPositions != null && count > 0) {
+        if (corsairLedPositions != null && corsairLedPositions.numberOfLed > 0) {
+            final int count = corsairLedPositions.numberOfLed;
             final CorsairLedPosition.ByReference pLedPosition = corsairLedPositions.pLedPosition;
             final CorsairLedPosition[] nativeLedPositions = (CorsairLedPosition[]) pLedPosition.toArray(new CorsairLedPosition[count]);
             ledPositions.ensureCapacity(count);
@@ -141,7 +141,7 @@ public class CueSDK {
         final int errorId = instance.CorsairGetLastError();
         final CorsairError error = CorsairError.byOrdinal(errorId);
         if (error != CorsairError.CE_Success) {
-            throw new RuntimeException(error + " - " + error.getMessage());
+            throw new RuntimeException(error + "");
         }
     }
 }
